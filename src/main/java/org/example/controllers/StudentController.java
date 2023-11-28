@@ -6,7 +6,7 @@ import org.example.annotations.POST;
 import org.example.annotations.Path;
 
 @Controller
-public class StudentController {
+public class StudentController extends MyAbstractController{
 
     @GET
     @Path("/students")
@@ -24,5 +24,11 @@ public class StudentController {
     @Path("/find/{student}")
     public int findStudent(String student){
         return 0;
+    }
+
+    @GET
+    @Path("/students/jmbg")
+    public void studentsJMBG(){
+
     }
 }
