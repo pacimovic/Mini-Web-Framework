@@ -29,23 +29,24 @@ public class DirectoryCrawler {
     private void mapAnotationRoutes(){
         for(Class cl: controllerClasses){
 
-            System.out.println("Metode klase: " + cl.getName());
             Method[] methods = cl.getDeclaredMethods();
             for(Method method: methods){
-                System.out.println("metoda: " + method.getName());
-                System.out.println("Njena klasa: " + method.getDeclaringClass().getName());
                 if(method.isAnnotationPresent(GET.class) && method.isAnnotationPresent(Path.class)){
-                    System.out.println("GET anotacija i PATH anotacija");
+                    Path pathInfo = method.getAnnotation(Path.class);
+                    if(!Main.routeMap.containsKey("GET@" + pathInfo.value())) Main.routeMap.put("GET@" + pathInfo.value(), method);
+                    else System.err.println("Route already exists!");
                 }
                 else if(method.isAnnotationPresent(POST.class) && method.isAnnotationPresent(Path.class)){
-                    System.out.println("POST anotacija i PATH anotacija");
+                    Path pathInfo = method.getAnnotation(Path.class);
+                    if(!Main.routeMap.containsKey("GET@" + pathInfo.value())) Main.routeMap.put("GET@" + pathInfo.value(), method);
+                    else System.err.println("Route already exists!");
                 }
                 else{
                     System.err.println("Annotation is missing!");
                 }
-                System.out.println("--------------------------");
+
             }
-            System.out.println("\n============================\n");
+
         }
     }
 
