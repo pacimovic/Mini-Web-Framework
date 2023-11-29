@@ -1,25 +1,25 @@
 package org.example.api.request;
 
-import org.example.api.request.enums.Method;
+import org.example.api.request.enums.MethodInfo;
 
 import java.util.HashMap;
 
 public class Request {
 
-    private Method method;
+    private MethodInfo method;
     private String location;
     private Header header;
     private HashMap<String, String> parameters;
 
     public Request() {
-        this(Method.GET, "/");
+        this(MethodInfo.GET, "/");
     }
 
-    public Request(Method method, String location) {
+    public Request(MethodInfo method, String location) {
         this(method, location, new Header(), new HashMap<String, String>());
     }
 
-    public Request(Method method, String location, Header header, HashMap<String, String> parameters) {
+    public Request(MethodInfo method, String location, Header header, HashMap<String, String> parameters) {
         this.method = method;
         this.location = location;
         this.header = header;
@@ -38,11 +38,11 @@ public class Request {
         return new HashMap<String, String>(this.parameters);
     }
 
-    public boolean isMethod(Method method) {
+    public boolean isMethod(MethodInfo method) {
         return this.getMethod().equals(method);
     }
 
-    public Method getMethod() {
+    public MethodInfo getMethod() {
         return method;
     }
 
@@ -52,7 +52,7 @@ public class Request {
 
     @Override
     public String toString() {
-        return "Method: " + method + ", location: " + location + ", headers: " + header;
+        return "Method: " + method + ", location: " + location + ", headers: " + header + ", parameters: " + parameters;
     }
 
     public Header getHeader() {

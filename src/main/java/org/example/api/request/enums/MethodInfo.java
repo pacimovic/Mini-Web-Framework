@@ -1,6 +1,6 @@
 package org.example.api.request.enums;
 
-public enum Method {
+public enum MethodInfo {
     GET,
     POST
 }

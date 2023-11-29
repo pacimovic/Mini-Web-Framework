@@ -10,8 +10,9 @@ public class StudentController extends MyAbstractController{
 
     @GET
     @Path("/students")
-    public int allStudents(){
-        return 0;
+    public String allStudents(){
+        System.out.println("Pokrenuta metoda GET /students IDEMOOOOO");
+        return "";
     }
 
     @POST
@@ -21,8 +22,9 @@ public class StudentController extends MyAbstractController{
     }
 
     @GET
-    @Path("/find/{student}")
+    @Path("/find")
     public int findStudent(String student){
+        System.out.println("Pokrenuta metoda GET /find sa parametrom student: " + student);
         return 0;
     }
 

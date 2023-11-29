@@ -1,21 +1,22 @@
 package org.example.main;
 
-
-import org.example.controllers.MyAbstractController;
 import org.example.discovery.DirectoryCrawler;
 
-import java.io.File;
-import java.lang.annotation.Annotation;
 import java.lang.reflect.Method;
 import java.util.HashMap;
 import java.util.Map;
 
-public class Main {
+public class MainClass {
 
-    public static Map<String, Method> routeMap = new HashMap<>();
 
-    public static void main(String[] args) throws ClassNotFoundException {
+    private Map<String, Method> routeMap = new HashMap<>();
+    private static MainClass single_instance = null;
 
+    private MainClass(){
+
+    }
+
+    public void analyze() throws ClassNotFoundException {
         DirectoryCrawler directoryCrawler = new DirectoryCrawler();
         directoryCrawler.discover();
 
@@ -27,9 +28,21 @@ public class Main {
             System.out.println("=======================");
         }
 
-
     }
 
+    public static synchronized MainClass getInstance()
+    {
+        if (single_instance == null)
+            single_instance = new MainClass();
 
+        return single_instance;
+    }
 
+    public Map<String, Method> getRouteMap() {
+        return routeMap;
+    }
+
+    public void setRouteMap(Map<String, Method> routeMap) {
+        this.routeMap = routeMap;
+    }
 }

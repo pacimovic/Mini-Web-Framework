@@ -3,12 +3,15 @@ package org.example.server;
 import org.example.api.request.Header;
 import org.example.api.request.Helper;
 import org.example.api.request.Request;
-import org.example.api.request.enums.Method;
+import org.example.api.request.enums.MethodInfo;
 import org.example.api.request.exceptions.RequestNotValidException;
 import org.example.api.response.JsonResponse;
 import org.example.api.response.Response;
+import org.example.main.MainClass;
 
 import java.io.*;
+import java.lang.reflect.InvocationTargetException;
+import java.lang.reflect.Method;
 import java.net.Socket;
 import java.util.HashMap;
 import java.util.Map;
@@ -46,7 +49,28 @@ public class ServerThread implements Runnable{
                 socket.close();
                 return;
             }
-            System.out.println(request);
+
+            //Ovde implementiramo logiku za pozivanje odgovarajuce metode
+            String route = request.getMethod() + "@" + request.getLocation();
+            System.out.println(route);
+            MainClass mainClass = MainClass.getInstance();
+            if(mainClass.getRouteMap().containsKey(route)){
+                Method method = mainClass.getRouteMap().get(route);
+                Class cl = method.getDeclaringClass();
+                Object obj = cl.getDeclaredConstructor().newInstance();
+
+                Class[] paramTypes = method.getParameterTypes();
+                for (int i = 0; i < paramTypes.length; i++) {
+                    if (i > 0)
+                        System.out.print(", ");
+                    System.out.print(paramTypes[i].getName());
+                }
+
+                //method.invoke(obj);
+
+                System.out.println(mainClass.getRouteMap().get(route));
+            }
+
 
 
             // Response example
@@ -64,6 +88,8 @@ public class ServerThread implements Runnable{
 
         } catch (IOException | RequestNotValidException e) {
             e.printStackTrace();
+        } catch (Exception e) {
+            throw new RuntimeException(e);
         }
     }
 
@@ -74,7 +100,7 @@ public class ServerThread implements Runnable{
         }
 
         String[] actionRow = command.split(" ");
-        Method method = Method.valueOf(actionRow[0]);
+        MethodInfo method = MethodInfo.valueOf(actionRow[0]);
         String route = actionRow[1];
         Header header = new Header();
         HashMap<String, String> parameters = Helper.getParametersFromRoute(route);
@@ -88,7 +114,7 @@ public class ServerThread implements Runnable{
 
         } while(!command.trim().equals(""));
 
-        if(method.equals(Method.POST)) {
+        if(method.equals(MethodInfo.POST)) {
             int contentLength = Integer.parseInt(header.get("Content-Length"));
             char[] buff = new char[contentLength];
             in.read(buff, 0, contentLength);
