@@ -19,6 +19,7 @@ public class Main {
         DirectoryCrawler directoryCrawler = new DirectoryCrawler();
         directoryCrawler.discover();
 
+
         for (Map.Entry<String, Method> entry : routeMap.entrySet()) {
             System.out.println("Route: " + entry.getKey());
             System.out.println("Metoda: " + entry.getValue().getName());

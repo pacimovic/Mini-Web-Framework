@@ -20,9 +20,8 @@ public class DirectoryCrawler {
         File file = new File("src/main/java/org/example");
         if(file.exists() && file.isDirectory()){
             crawl(file);
+            mapAnotationRoutes();
         }
-
-        mapAnotationRoutes();
 
     }
 
