@@ -62,8 +62,6 @@ public class ServerThread implements Runnable{
             if(mainClass.getRouteMap().containsKey(route)){
                 boolean flag = true;
                 Method method = mainClass.getRouteMap().get(route);
-                Class cl = method.getDeclaringClass();
-                Object obj = cl.getDeclaredConstructor().newInstance();
 
 
                 List<String> requestParameters = new ArrayList<>();
@@ -92,6 +90,8 @@ public class ServerThread implements Runnable{
                     }
                 }
 
+                //uzmemo vec gotovu instancu klase ove metode
+                Object obj = MainClass.getInstance().getMethodMap().get(method);
                 if(flag) method.invoke(obj, requestParameters.toArray(new String[0]));
 
                 System.out.println(mainClass.getRouteMap().get(route).getName());

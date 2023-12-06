@@ -7,6 +7,7 @@ import org.example.annotations.Path;
 import org.example.main.MainClass;
 
 import java.io.File;
+import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.util.ArrayList;
 import java.util.List;
@@ -15,7 +16,7 @@ public class DirectoryCrawler {
 
     private List<Class> controllerClasses = new ArrayList<>();
 
-    public void discover() throws ClassNotFoundException {
+    public void discover() throws ClassNotFoundException, InvocationTargetException, NoSuchMethodException, InstantiationException, IllegalAccessException {
         File file = new File("src/main/java/org/example");
         if(file.exists() && file.isDirectory()){
             crawl(file);
@@ -24,11 +25,16 @@ public class DirectoryCrawler {
 
     }
 
-    private void mapAnotationRoutes(){
+    private void mapAnotationRoutes() throws NoSuchMethodException, InvocationTargetException, InstantiationException, IllegalAccessException {
         for(Class cl: controllerClasses){
+            //instanciranje klase
+            Object obj = cl.getDeclaredConstructor().newInstance();
 
             Method[] methods = cl.getDeclaredMethods();
             for(Method method: methods){
+                //za odgovarajucu metodu vezemo instancu njene klase
+                MainClass.getInstance().getMethodMap().put(method, obj);
+
                 if(method.isAnnotationPresent(GET.class) && method.isAnnotationPresent(Path.class)){
                     Path pathInfo = method.getAnnotation(Path.class);
                     if(!MainClass.getInstance().getRouteMap().containsKey("GET@" + pathInfo.value())) MainClass.getInstance().getRouteMap().put("GET@" + pathInfo.value(), method);

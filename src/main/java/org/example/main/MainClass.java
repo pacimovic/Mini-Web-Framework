@@ -1,7 +1,9 @@
 package org.example.main;
 
+import org.example.controllers.MyAbstractController;
 import org.example.discovery.DirectoryCrawler;
 
+import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.util.HashMap;
 import java.util.Map;
@@ -10,22 +12,31 @@ public class MainClass {
 
 
     private Map<String, Method> routeMap = new HashMap<>();
+    private Map<Method, Object> methodMap = new HashMap<>();
     private static MainClass single_instance = null;
 
     private MainClass(){
 
     }
 
-    public void analyze() throws ClassNotFoundException {
+    public void analyze() throws ClassNotFoundException, InvocationTargetException, NoSuchMethodException, InstantiationException, IllegalAccessException {
         DirectoryCrawler directoryCrawler = new DirectoryCrawler();
         directoryCrawler.discover();
 
 
         for (Map.Entry<String, Method> entry : routeMap.entrySet()) {
-            System.out.println("Route: " + entry.getKey());
-            System.out.println("Metoda: " + entry.getValue().getName());
-            System.out.println("Klasa: " + entry.getValue().getDeclaringClass().getName());
+
+            String route = entry.getKey();
+            Method method = entry.getValue();
+            Class klasa = entry.getValue().getDeclaringClass();
+
+            System.out.println("Route: " + route);
+            System.out.println("Metoda: " + method.getName());
+            System.out.println("Klasa: " + klasa.getName());
             System.out.println("=======================");
+
+
+
         }
 
     }
@@ -44,5 +55,14 @@ public class MainClass {
 
     public void setRouteMap(Map<String, Method> routeMap) {
         this.routeMap = routeMap;
+    }
+
+
+    public Map<Method, Object> getMethodMap() {
+        return methodMap;
+    }
+
+    public void setMethodMap(Map<Method, Object> methodMap) {
+        this.methodMap = methodMap;
     }
 }
