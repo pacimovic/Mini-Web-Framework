@@ -1,5 +1,6 @@
 package org.example.server;
 
+import org.example.annotations.Param;
 import org.example.api.request.Header;
 import org.example.api.request.Helper;
 import org.example.api.request.Request;
@@ -12,8 +13,11 @@ import org.example.main.MainClass;
 import java.io.*;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
+import java.lang.reflect.Parameter;
 import java.net.Socket;
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 public class ServerThread implements Runnable{
@@ -51,24 +55,50 @@ public class ServerThread implements Runnable{
             }
 
             //Ovde implementiramo logiku za pozivanje odgovarajuce metode
-            String route = request.getMethod() + "@" + request.getLocation();
-            System.out.println(route);
+            String[] location = request.getLocation().split("\\?");
+            String route = request.getMethod() + "@" + location[0];
             MainClass mainClass = MainClass.getInstance();
+            System.out.println(route);
             if(mainClass.getRouteMap().containsKey(route)){
+                boolean flag = true;
                 Method method = mainClass.getRouteMap().get(route);
                 Class cl = method.getDeclaringClass();
                 Object obj = cl.getDeclaredConstructor().newInstance();
 
-                Class[] paramTypes = method.getParameterTypes();
-                for (int i = 0; i < paramTypes.length; i++) {
-                    if (i > 0)
-                        System.out.print(", ");
-                    System.out.print(paramTypes[i].getName());
+
+                List<String> requestParameters = new ArrayList<>();
+
+                //ovde prodji kroz parametre metode i njihove anotacije
+                Parameter[] parameters = method.getParameters();
+                for (int i = 0; i < parameters.length; i++) {
+                    if(parameters[i].isAnnotationPresent(Param.class)){
+                        Param param = parameters[i].getAnnotation(Param.class);
+                        String paramName = param.value();
+
+                        //proveriti da li u requestu imamo parametre sa vrednosti paramName
+                        if(request.getParameters().containsKey(paramName)){
+                            requestParameters.add(request.getParameter(paramName));
+                        }
+                        else{
+                            //error da nam nedostaje odgovarajuci parametar
+                            System.err.println("Missing parameter in request!");
+                            flag = false;
+                        }
+                    }
+                    else{
+                        //error da ne postoji anotacija na parametru
+                        System.err.println("Missing annotation!");
+                        flag = false;
+                    }
                 }
 
-                //method.invoke(obj);
+                if(flag) method.invoke(obj, requestParameters.toArray(new String[0]));
 
-                System.out.println(mainClass.getRouteMap().get(route));
+                System.out.println(mainClass.getRouteMap().get(route).getName());
+            }
+            else{
+                //error da ne postoji odgovarajuca ruta u kontroleru
+                System.err.println("There is no specific route in controller!");
             }
 
 

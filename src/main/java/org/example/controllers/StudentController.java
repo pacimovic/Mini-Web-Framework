@@ -1,9 +1,6 @@
 package org.example.controllers;
 
-import org.example.annotations.Controller;
-import org.example.annotations.GET;
-import org.example.annotations.POST;
-import org.example.annotations.Path;
+import org.example.annotations.*;
 
 @Controller
 public class StudentController extends MyAbstractController{
@@ -16,21 +13,22 @@ public class StudentController extends MyAbstractController{
     }
 
     @POST
-    @Path("/add")
-    public void addStudent(String student){
-
+    @Path("/students/add")
+    public void addStudent(@Param("student") String student){
+        System.out.println("Pokrenuta metoda POST /add sa parametrom student: " + student);
     }
 
     @GET
-    @Path("/find")
-    public int findStudent(String student){
+    @Path("/students/find")
+    public int findStudent(@Param("student") String student){
         System.out.println("Pokrenuta metoda GET /find sa parametrom student: " + student);
         return 0;
     }
 
     @GET
     @Path("/students/jmbg")
-    public void studentsJMBG(){
-
+    public int studentsJMBG(@Param("student") String student,@Param("jmbg") String jmbg){
+        System.out.println("Pokrenuta metoda GET /students/jmbg sa parametrima student: " + student + ", i jmbg: " + jmbg);
+        return 0;
     }
 }
