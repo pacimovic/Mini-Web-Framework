@@ -4,6 +4,7 @@ import org.example.annotations.Controller;
 import org.example.annotations.GET;
 import org.example.annotations.POST;
 import org.example.annotations.Path;
+import org.example.dependencies.DIEngine;
 import org.example.main.MainClass;
 
 import java.io.File;
@@ -27,13 +28,13 @@ public class DirectoryCrawler {
 
     private void mapAnotationRoutes() throws NoSuchMethodException, InvocationTargetException, InstantiationException, IllegalAccessException {
         for(Class cl: controllerClasses){
-            //instanciranje klase
-            Object obj = cl.getDeclaredConstructor().newInstance();
+
+            Object obj = DIEngine.getInstance().initializeController(cl);
 
             Method[] methods = cl.getDeclaredMethods();
             for(Method method: methods){
-                //za odgovarajucu metodu vezemo instancu njene klase
-                MainClass.getInstance().getMethodMap().put(method, obj);
+                //Vezi metodu za instancu njene klase
+                DIEngine.getInstance().getMethodMap().put(method, obj);
 
                 if(method.isAnnotationPresent(GET.class) && method.isAnnotationPresent(Path.class)){
                     Path pathInfo = method.getAnnotation(Path.class);

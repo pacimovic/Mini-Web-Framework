@@ -1,6 +1,5 @@
 package org.example.main;
 
-import org.example.controllers.MyAbstractController;
 import org.example.discovery.DirectoryCrawler;
 
 import java.lang.reflect.InvocationTargetException;
@@ -12,7 +11,7 @@ public class MainClass {
 
 
     private Map<String, Method> routeMap = new HashMap<>();
-    private Map<Method, Object> methodMap = new HashMap<>();
+
     private static MainClass single_instance = null;
 
     private MainClass(){
@@ -58,11 +57,4 @@ public class MainClass {
     }
 
 
-    public Map<Method, Object> getMethodMap() {
-        return methodMap;
-    }
-
-    public void setMethodMap(Map<Method, Object> methodMap) {
-        this.methodMap = methodMap;
-    }
 }

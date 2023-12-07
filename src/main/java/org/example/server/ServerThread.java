@@ -8,6 +8,7 @@ import org.example.api.request.enums.MethodInfo;
 import org.example.api.request.exceptions.RequestNotValidException;
 import org.example.api.response.JsonResponse;
 import org.example.api.response.Response;
+import org.example.dependencies.DIEngine;
 import org.example.main.MainClass;
 
 import java.io.*;
@@ -91,7 +92,7 @@ public class ServerThread implements Runnable{
                 }
 
                 //uzmemo vec gotovu instancu klase ove metode
-                Object obj = MainClass.getInstance().getMethodMap().get(method);
+                Object obj = DIEngine.getInstance().getMethodMap().get(method);
                 if(flag) method.invoke(obj, requestParameters.toArray(new String[0]));
 
                 System.out.println(mainClass.getRouteMap().get(route).getName());

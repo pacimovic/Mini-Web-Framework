@@ -6,7 +6,7 @@ import org.example.annotations.Param;
 import org.example.annotations.Path;
 
 @Controller
-public class NewsController extends MyAbstractController{
+public class NewsController {
 
     @GET
     @Path("/news")

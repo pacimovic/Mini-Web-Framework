@@ -3,7 +3,7 @@ package org.example.controllers;
 import org.example.annotations.*;
 
 @Controller
-public class StudentController extends MyAbstractController{
+public class StudentController {
 
     @GET
     @Path("/students")
