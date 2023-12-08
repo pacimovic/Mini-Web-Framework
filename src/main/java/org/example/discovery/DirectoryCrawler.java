@@ -17,7 +17,7 @@ public class DirectoryCrawler {
 
     private List<Class> controllerClasses = new ArrayList<>();
 
-    public void discover() throws ClassNotFoundException, InvocationTargetException, NoSuchMethodException, InstantiationException, IllegalAccessException {
+    public void discover() throws Exception {
         File file = new File("src/main/java/org/example");
         if(file.exists() && file.isDirectory()){
             crawl(file);
@@ -26,7 +26,7 @@ public class DirectoryCrawler {
 
     }
 
-    private void mapAnotationRoutes() throws NoSuchMethodException, InvocationTargetException, InstantiationException, IllegalAccessException {
+    private void mapAnotationRoutes() throws Exception {
         for(Class cl: controllerClasses){
 
             Object obj = DIEngine.getInstance().initializeController(cl);

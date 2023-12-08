@@ -1,8 +1,10 @@
 package org.example.dependencies;
 
 import org.example.annotations.Autowired;
+import org.example.annotations.Bean;
 
 import java.lang.annotation.Annotation;
+import java.lang.annotation.AnnotationTypeMismatchException;
 import java.lang.reflect.Field;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
@@ -23,14 +25,14 @@ public class DIEngine {
 
     }
 
-    public Object initializeController(Class controller) throws InvocationTargetException, NoSuchMethodException, InstantiationException, IllegalAccessException {
+    public Object initializeController(Class controller) throws Exception {
         Object obj = null;
         obj = initializeDependecies(controller);
         return obj;
     }
 
     //recursive
-    public Object initializeDependecies(Class dependecyClass) throws NoSuchMethodException, InvocationTargetException, InstantiationException, IllegalAccessException {
+    public Object initializeDependecies(Class dependecyClass) throws Exception {
 
         //instanciramo controller/dependency
         Object obj = null;
@@ -41,6 +43,10 @@ public class DIEngine {
         for(Field f: fields){
             if(f.isAnnotationPresent(Autowired.class)){
                 Class dependency = f.getType();
+
+                //Proverimo da li je klasa tog polja oznacena sa @Bean
+                if(!dependency.isAnnotationPresent(Bean.class)) throw new Exception("@Bean annotation missing");
+
                 Object objDependancy = initializeDependecies(dependency);
 
                 //nasetujemo instancu dependency-ja na ovo polje

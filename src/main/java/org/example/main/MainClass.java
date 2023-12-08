@@ -18,7 +18,7 @@ public class MainClass {
 
     }
 
-    public void analyze() throws ClassNotFoundException, InvocationTargetException, NoSuchMethodException, InstantiationException, IllegalAccessException {
+    public void analyze() throws Exception {
         DirectoryCrawler directoryCrawler = new DirectoryCrawler();
         directoryCrawler.discover();
 
