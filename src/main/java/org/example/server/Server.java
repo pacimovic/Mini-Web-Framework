@@ -10,7 +10,7 @@ import java.net.Socket;
 public class Server {
     public static final int TCP_PORT = 8080;
 
-    public static void main(String[] args) throws IOException {
+    public static void main(String[] args) {
 
 
         try {
@@ -25,15 +25,7 @@ public class Server {
 
         } catch (IOException e) {
             e.printStackTrace();
-        } catch (ClassNotFoundException e) {
-            throw new RuntimeException(e);
-        } catch (InvocationTargetException e) {
-            throw new RuntimeException(e);
-        } catch (NoSuchMethodException e) {
-            throw new RuntimeException(e);
-        } catch (InstantiationException e) {
-            throw new RuntimeException(e);
-        } catch (IllegalAccessException e) {
+        } catch (Exception e) {
             throw new RuntimeException(e);
         }
 

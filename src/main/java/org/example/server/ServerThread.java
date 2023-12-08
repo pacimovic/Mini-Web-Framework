@@ -64,7 +64,6 @@ public class ServerThread implements Runnable{
                 boolean flag = true;
                 Method method = mainClass.getRouteMap().get(route);
 
-
                 List<String> requestParameters = new ArrayList<>();
 
                 //ovde prodji kroz parametre metode i njihove anotacije

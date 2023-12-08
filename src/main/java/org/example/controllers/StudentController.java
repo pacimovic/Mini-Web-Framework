@@ -1,15 +1,18 @@
 package org.example.controllers;
 
 import org.example.annotations.*;
+import org.example.services.StudentService;
 
 @Controller
 public class StudentController {
 
+    @Autowired
+    private StudentService studentService;
+
     @GET
     @Path("/students")
     public String allStudents(){
-        System.out.println("Pokrenuta metoda GET /students IDEMOOOOO");
-        return "";
+        return this.studentService.allStudents();
     }
 
     @POST

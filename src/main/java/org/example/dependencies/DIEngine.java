@@ -23,36 +23,32 @@ public class DIEngine {
 
     }
 
-    public Object initializeController(Class controller){
-
+    public Object initializeController(Class controller) throws InvocationTargetException, NoSuchMethodException, InstantiationException, IllegalAccessException {
         Object obj = null;
-
-        try {
-            obj = controller.getDeclaredConstructor().newInstance();
-
-            initializeDependecies(controller);
-
-
-        } catch (Exception e) {
-            throw new RuntimeException(e);
-        }
-
+        obj = initializeDependecies(controller);
         return obj;
     }
 
     //recursive
-    public void initializeDependecies(Class dependecyClass) throws NoSuchMethodException, InvocationTargetException, InstantiationException, IllegalAccessException {
+    public Object initializeDependecies(Class dependecyClass) throws NoSuchMethodException, InvocationTargetException, InstantiationException, IllegalAccessException {
+
+        //instanciramo controller/dependency
+        Object obj = null;
+        obj = dependecyClass.getDeclaredConstructor().newInstance();
+
         //Iteriramo kroz sve atribute klase dependancyClass i pretrazujemo one anotirane sa @Autowired
         Field[] fields = dependecyClass.getDeclaredFields();
         for(Field f: fields){
             if(f.isAnnotationPresent(Autowired.class)){
                 Class dependency = f.getType();
-                initializeDependecies(dependency);
+                Object objDependancy = initializeDependecies(dependency);
 
-                Object obj = dependency.getDeclaredConstructor().newInstance();
-                dependencies.add(obj);
+                //nasetujemo instancu dependency-ja na ovo polje
+                f.setAccessible(true);
+                f.set(obj, objDependancy);
             }
         }
+        return obj;
     }
 
     public Map<Method, Object> getMethodMap() {
