@@ -7,6 +7,7 @@ import java.lang.annotation.AnnotationTypeMismatchException;
 import java.lang.reflect.Field;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -91,9 +92,16 @@ public class DIEngine {
         Field[] fields = dependecyClass.getDeclaredFields();
         for(Field f: fields){
             if(f.isAnnotationPresent(Autowired.class)){
+                Autowired autowired = f.getAnnotation(Autowired.class);
+
                 Class dependency = f.getType();
 
                 Object objDependancy = initializeDependecies(dependency);
+
+                if(autowired.verbose()){
+                    System.out.println("Initialized <" + f.getType() + "> <" + f.getName() + "> in <" +
+                            f.getDeclaringClass().getName() + "> on <" + LocalDateTime.now() + "> with <" + objDependancy.hashCode() + ">");
+                }
 
                 //nasetujemo instancu dependency-ja na ovo polje
                 f.setAccessible(true);

@@ -2,7 +2,7 @@ package org.example.services;
 
 import org.example.annotations.Bean;
 
-@Bean(scope = "prototype")
+@Bean(scope = "singleton")
 public class NewsService {
 
     public void allNews(){

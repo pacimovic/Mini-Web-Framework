@@ -6,10 +6,10 @@ import org.example.annotations.Component;
 import org.example.annotations.Service;
 import org.example.repositories.StudentRepository;
 
-@Component
+@Service
 public class StudentService {
 
-    @Autowired
+    @Autowired(verbose = true)
     private StudentRepository studentRepository;
 
     public String allStudents(){

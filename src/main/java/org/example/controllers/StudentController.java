@@ -7,10 +7,10 @@ import org.example.services.StudentService;
 @Controller
 public class StudentController {
 
-    @Autowired
+    @Autowired(verbose = true)
     private StudentService studentService;
 
-    @Autowired
+    @Autowired(verbose = true)
     private NewsService newsService;
 
     @GET
