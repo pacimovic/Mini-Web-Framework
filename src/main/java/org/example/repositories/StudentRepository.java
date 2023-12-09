@@ -2,7 +2,7 @@ package org.example.repositories;
 
 import org.example.annotations.Bean;
 
-@Bean
+@Bean(scope = "prototype")
 public class StudentRepository {
 
     public String allStudents(){

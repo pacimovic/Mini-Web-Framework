@@ -4,7 +4,7 @@ import org.example.annotations.Autowired;
 import org.example.annotations.Bean;
 import org.example.repositories.StudentRepository;
 
-@Bean
+@Bean(scope = "prototype")
 public class StudentService {
 
     @Autowired

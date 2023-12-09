@@ -2,6 +2,7 @@ package org.example.dependencies;
 
 import org.example.annotations.Autowired;
 import org.example.annotations.Bean;
+import org.example.annotations.Controller;
 
 import java.lang.annotation.Annotation;
 import java.lang.annotation.AnnotationTypeMismatchException;
@@ -19,7 +20,9 @@ public class DIEngine {
 
     //Mapa metoda i instanca njihovih klasa kontrolera
     private Map<Method, Object> methodMap = new HashMap<>();
-    private List<Object> dependencies = new ArrayList<>();
+
+    //Mapa instanca dependency-ja anotiranih sa @Bean(scope = "singleton")
+    private Map<Class, Object> dependencyMap = new HashMap<>();
 
     private DIEngine(){
 
@@ -34,18 +37,44 @@ public class DIEngine {
     //recursive
     public Object initializeDependecies(Class dependecyClass) throws Exception {
 
-        //instanciramo controller/dependency
         Object obj = null;
-        obj = dependecyClass.getDeclaredConstructor().newInstance();
+
+        if(dependecyClass.isAnnotationPresent(Controller.class)){
+            obj = dependecyClass.getDeclaredConstructor().newInstance();
+        }
+        //Proverimo da li je klasa oznacena sa @Bean a nije @Controller
+        else if(!dependecyClass.isAnnotationPresent(Bean.class) && !dependecyClass.isAnnotationPresent(Controller.class)) {
+            throw new Exception("@Bean annotation missing");
+        }
+        //Ako jeste @Bean proverimo scope
+        else if (dependecyClass.isAnnotationPresent(Bean.class)) {
+            Bean beanAnnotation = (Bean) dependecyClass.getAnnotation(Bean.class);
+            if(beanAnnotation.scope().equals("singleton")){
+                //izvuci ga iz mape ako je tu
+                if(dependencyMap.containsKey(dependecyClass)){
+                    obj = dependencyMap.get(dependecyClass);
+                    System.out.println("izvucen dependency iz mape (singleton): " + dependecyClass.getName());
+                    return obj;
+                }
+                else{
+                    obj = dependecyClass.getDeclaredConstructor().newInstance();
+                    dependencyMap.put(dependecyClass, obj);
+                    System.out.println("napravljen novi dependency (singleton): " + dependecyClass.getName());
+                }
+            }
+            else if(beanAnnotation.scope().equals("prototype")){
+                //instanciraj novi dependancy
+                obj = dependecyClass.getDeclaredConstructor().newInstance();
+                System.out.println("napravljen novi dependency (prototype): " + dependecyClass.getName());
+            }
+        }
+
 
         //Iteriramo kroz sve atribute klase dependancyClass i pretrazujemo one anotirane sa @Autowired
         Field[] fields = dependecyClass.getDeclaredFields();
         for(Field f: fields){
             if(f.isAnnotationPresent(Autowired.class)){
                 Class dependency = f.getType();
-
-                //Proverimo da li je klasa tog polja oznacena sa @Bean
-                if(!dependency.isAnnotationPresent(Bean.class)) throw new Exception("@Bean annotation missing");
 
                 Object objDependancy = initializeDependecies(dependency);
 
