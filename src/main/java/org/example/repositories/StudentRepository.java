@@ -1,8 +1,10 @@
 package org.example.repositories;
 
 import org.example.annotations.Bean;
+import org.example.annotations.Component;
+import org.example.annotations.Service;
 
-@Bean(scope = "prototype")
+@Service
 public class StudentRepository {
 
     public String allStudents(){

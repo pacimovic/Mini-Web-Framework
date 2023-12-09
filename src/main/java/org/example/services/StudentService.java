@@ -2,9 +2,11 @@ package org.example.services;
 
 import org.example.annotations.Autowired;
 import org.example.annotations.Bean;
+import org.example.annotations.Component;
+import org.example.annotations.Service;
 import org.example.repositories.StudentRepository;
 
-@Bean(scope = "prototype")
+@Component
 public class StudentService {
 
     @Autowired

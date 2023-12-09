@@ -1,8 +1,6 @@
 package org.example.dependencies;
 
-import org.example.annotations.Autowired;
-import org.example.annotations.Bean;
-import org.example.annotations.Controller;
+import org.example.annotations.*;
 
 import java.lang.annotation.Annotation;
 import java.lang.annotation.AnnotationTypeMismatchException;
@@ -43,8 +41,9 @@ public class DIEngine {
             obj = dependecyClass.getDeclaredConstructor().newInstance();
         }
         //Proverimo da li je klasa oznacena sa @Bean a nije @Controller
-        else if(!dependecyClass.isAnnotationPresent(Bean.class) && !dependecyClass.isAnnotationPresent(Controller.class)) {
-            throw new Exception("@Bean annotation missing");
+        else if(!(dependecyClass.isAnnotationPresent(Bean.class) || dependecyClass.isAnnotationPresent(Service.class) ||
+                dependecyClass.isAnnotationPresent(Component.class)) && !dependecyClass.isAnnotationPresent(Controller.class)) {
+            throw new Exception("Annotation missing");
         }
         //Ako jeste @Bean proverimo scope
         else if (dependecyClass.isAnnotationPresent(Bean.class)) {
@@ -67,6 +66,24 @@ public class DIEngine {
                 obj = dependecyClass.getDeclaredConstructor().newInstance();
                 System.out.println("napravljen novi dependency (prototype): " + dependecyClass.getName());
             }
+        }
+        else if(dependecyClass.isAnnotationPresent(Service.class)){
+            //izvuci ga iz mape ako je tu
+            if(dependencyMap.containsKey(dependecyClass)){
+                obj = dependencyMap.get(dependecyClass);
+                System.out.println("izvucen dependency iz mape (singleton): " + dependecyClass.getName());
+                return obj;
+            }
+            else{
+                obj = dependecyClass.getDeclaredConstructor().newInstance();
+                dependencyMap.put(dependecyClass, obj);
+                System.out.println("napravljen novi dependency (singleton): " + dependecyClass.getName());
+            }
+        }
+        else if(dependecyClass.isAnnotationPresent(Component.class)){
+            //instanciraj novi dependancy
+            obj = dependecyClass.getDeclaredConstructor().newInstance();
+            System.out.println("napravljen novi dependency (prototype): " + dependecyClass.getName());
         }
 
 
