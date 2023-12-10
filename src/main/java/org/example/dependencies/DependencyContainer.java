@@ -2,6 +2,7 @@ package org.example.dependencies;
 
 import org.example.annotations.Qualifier;
 
+import java.lang.reflect.InvocationTargetException;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -14,9 +15,12 @@ public class DependencyContainer {
     private DependencyContainer(){}
 
 
-    public void setImplementation(Class cl) {
-        if(cl.isAnnotationPresent(Qualifier.class)){
-
+    public void setImplementation(Class cl) throws Exception{
+        if(cl.isAnnotationPresent(Qualifier.class)) {
+            Qualifier qu = (Qualifier) cl.getAnnotation(Qualifier.class);
+            String value = qu.value();
+            Object obj = cl.getDeclaredConstructor().newInstance();
+            interfaceImplementations.put(value, obj);
         }
     }
 

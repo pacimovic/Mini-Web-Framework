@@ -2,6 +2,7 @@ package org.example.discovery;
 
 import org.example.annotations.*;
 import org.example.dependencies.DIEngine;
+import org.example.dependencies.DependencyContainer;
 import org.example.main.MainClass;
 
 import java.io.File;
@@ -26,10 +27,12 @@ public class DirectoryCrawler {
 
     private void mapAnotationRoutes() throws Exception {
 
-        //ovde nasetujemo implementacije
+        //ovde sacuvamo implementacije
         for(Class cl: implementationClasses){
+            DependencyContainer.getInstance().setImplementation(cl);
         }
 
+        //ovde inicijalizujemo kontrolere i sve njegove dependency-je, i takodje nasetujemo metode na rute
         for(Class cl: controllerClasses){
 
             //inicijalizujemo kontroler
