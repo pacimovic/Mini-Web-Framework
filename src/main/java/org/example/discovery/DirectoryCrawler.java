@@ -1,9 +1,6 @@
 package org.example.discovery;
 
-import org.example.annotations.Controller;
-import org.example.annotations.GET;
-import org.example.annotations.POST;
-import org.example.annotations.Path;
+import org.example.annotations.*;
 import org.example.dependencies.DIEngine;
 import org.example.main.MainClass;
 
@@ -16,6 +13,7 @@ import java.util.List;
 public class DirectoryCrawler {
 
     private List<Class> controllerClasses = new ArrayList<>();
+    private List<Class> implementationClasses = new ArrayList<>();
 
     public void discover() throws Exception {
         File file = new File("src/main/java/org/example");
@@ -27,8 +25,14 @@ public class DirectoryCrawler {
     }
 
     private void mapAnotationRoutes() throws Exception {
+
+        //ovde nasetujemo implementacije
+        for(Class cl: implementationClasses){
+        }
+
         for(Class cl: controllerClasses){
 
+            //inicijalizujemo kontroler
             Object obj = DIEngine.getInstance().initializeController(cl);
 
             Method[] methods = cl.getDeclaredMethods();
@@ -68,6 +72,9 @@ public class DirectoryCrawler {
 
             if(!cl.isAnnotation() && cl.isAnnotationPresent(Controller.class)){
                 controllerClasses.add(cl);
+            }
+            if(!cl.isAnnotation() && cl.isAnnotationPresent(Qualifier.class)){
+                implementationClasses.add(cl);
             }
         }
     }

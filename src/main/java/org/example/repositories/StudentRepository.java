@@ -1,10 +1,10 @@
 package org.example.repositories;
 
-import org.example.annotations.Bean;
-import org.example.annotations.Component;
+import org.example.annotations.Qualifier;
 import org.example.annotations.Service;
 
 @Service
+@Qualifier("sqlRepository")
 public class StudentRepository {
 
     public String allStudents(){

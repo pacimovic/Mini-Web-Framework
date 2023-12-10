@@ -41,7 +41,7 @@ public class DIEngine {
         if(dependecyClass.isAnnotationPresent(Controller.class)){
             obj = dependecyClass.getDeclaredConstructor().newInstance();
         }
-        //Proverimo da li je klasa oznacena sa @Bean a nije @Controller
+        //Proverimo da li je klasa oznacena sa @Bean, @Service, @Component a nije @Controller
         else if(!(dependecyClass.isAnnotationPresent(Bean.class) || dependecyClass.isAnnotationPresent(Service.class) ||
                 dependecyClass.isAnnotationPresent(Component.class)) && !dependecyClass.isAnnotationPresent(Controller.class)) {
             throw new Exception("Annotation missing");
