@@ -53,38 +53,38 @@ public class DIEngine {
                 //izvuci ga iz mape ako je tu
                 if(dependencyMap.containsKey(dependecyClass)){
                     obj = dependencyMap.get(dependecyClass);
-                    System.out.println("izvucen dependency iz mape (singleton): " + dependecyClass.getName());
+                    //System.out.println("izvucen dependency iz mape (singleton): " + dependecyClass.getName());
                     return obj;
                 }
                 else{
                     obj = dependecyClass.getDeclaredConstructor().newInstance();
                     dependencyMap.put(dependecyClass, obj);
-                    System.out.println("napravljen novi dependency (singleton): " + dependecyClass.getName());
+                    //System.out.println("napravljen novi dependency (singleton): " + dependecyClass.getName());
                 }
             }
             else if(beanAnnotation.scope().equals("prototype")){
                 //instanciraj novi dependancy
                 obj = dependecyClass.getDeclaredConstructor().newInstance();
-                System.out.println("napravljen novi dependency (prototype): " + dependecyClass.getName());
+                //System.out.println("napravljen novi dependency (prototype): " + dependecyClass.getName());
             }
         }
         else if(dependecyClass.isAnnotationPresent(Service.class)){
             //izvuci ga iz mape ako je tu
             if(dependencyMap.containsKey(dependecyClass)){
                 obj = dependencyMap.get(dependecyClass);
-                System.out.println("izvucen dependency iz mape (singleton): " + dependecyClass.getName());
+                //System.out.println("izvucen dependency iz mape (singleton): " + dependecyClass.getName());
                 return obj;
             }
             else{
                 obj = dependecyClass.getDeclaredConstructor().newInstance();
                 dependencyMap.put(dependecyClass, obj);
-                System.out.println("napravljen novi dependency (singleton): " + dependecyClass.getName());
+                //System.out.println("napravljen novi dependency (singleton): " + dependecyClass.getName());
             }
         }
         else if(dependecyClass.isAnnotationPresent(Component.class)){
             //instanciraj novi dependancy
             obj = dependecyClass.getDeclaredConstructor().newInstance();
-            System.out.println("napravljen novi dependency (prototype): " + dependecyClass.getName());
+            //System.out.println("napravljen novi dependency (prototype): " + dependecyClass.getName());
         }
 
 
@@ -92,12 +92,15 @@ public class DIEngine {
         Field[] fields = dependecyClass.getDeclaredFields();
         for(Field f: fields){
             if(f.isAnnotationPresent(Autowired.class)){
-                Autowired autowired = f.getAnnotation(Autowired.class);
-
                 Class dependency = f.getType();
+                if(dependency.isInterface()){
+                    Class implementationClass = DependencyContainer.getInstance().getImplementation(f);
+                    dependency = implementationClass;
+                }
 
                 Object objDependancy = initializeDependecies(dependency);
 
+                Autowired autowired = f.getAnnotation(Autowired.class);
                 if(autowired.verbose()){
                     System.out.println("Initialized <" + f.getType() + "> <" + f.getName() + "> in <" +
                             f.getDeclaringClass().getName() + "> on <" + LocalDateTime.now() + "> with <" + objDependancy.hashCode() + ">");
