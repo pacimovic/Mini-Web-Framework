@@ -15,7 +15,7 @@ public class DependencyContainer {
     private DependencyContainer(){}
 
 
-    public Class getImplementation(Field interfaceField) {
+    public Class getImplementation(Field interfaceField) throws Exception {
         if(interfaceField.isAnnotationPresent(Qualifier.class)){
             Qualifier qu = interfaceField.getAnnotation(Qualifier.class);
             String value = qu.value();
@@ -23,20 +23,22 @@ public class DependencyContainer {
                 return interfaceImplementations.get(value);
             }
             else{
-                //error
+                throw new Exception("Implementation doesn't exist for given field");
             }
         }
         else{
-            //error
+            throw new Exception("Missing annotation Qualifier!");
         }
 
-        return null;
     }
 
-    public void setImplementation(Class cl){
+    public void setImplementation(Class cl) throws Exception {
         if(cl.isAnnotationPresent(Qualifier.class)) {
             Qualifier qu = (Qualifier) cl.getAnnotation(Qualifier.class);
             String value = qu.value();
+            if(interfaceImplementations.containsKey(value)){
+                throw new Exception("Bean with specific Qualifier already exist!");
+            }
             interfaceImplementations.put(value, cl);
         }
     }

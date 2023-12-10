@@ -1,14 +1,6 @@
 package org.example.repositories;
 
-import org.example.annotations.Qualifier;
-import org.example.annotations.Service;
+public interface StudentRepository {
 
-@Service
-@Qualifier("sqlRepository")
-public class StudentRepository {
-
-    public String allStudents(){
-        System.out.println("Pokrenuta metoda unutar repository-ja");
-        return "";
-    }
+    public String allStudents();
 }
