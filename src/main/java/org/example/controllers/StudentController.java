@@ -1,8 +1,11 @@
 package org.example.controllers;
 
 import org.example.annotations.*;
+import org.example.models.Student;
 import org.example.services.NewsService;
 import org.example.services.StudentService;
+
+import java.util.List;
 
 @Controller
 public class StudentController {
@@ -15,7 +18,7 @@ public class StudentController {
 
     @GET
     @Path("/students")
-    public String allStudents(){
+    public List<Student> allStudents(){
         return this.studentService.allStudents();
     }
 
@@ -27,9 +30,10 @@ public class StudentController {
 
     @GET
     @Path("/students/find")
-    public int findStudent(@Param("student") String student){
+    public Student findStudent(@Param("student") String student){
         System.out.println("Pokrenuta metoda GET /find sa parametrom student: " + student);
-        return 0;
+        Student student1 = new Student(1, "Petar", "1512998710000");
+        return student1;
     }
 
     @GET

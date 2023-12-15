@@ -1,6 +1,10 @@
 package org.example.repositories;
 
+import org.example.models.Student;
+
+import java.util.List;
+
 public interface StudentRepository {
 
-    public String allStudents();
+    public List<Student> allStudents();
 }

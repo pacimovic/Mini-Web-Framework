@@ -55,6 +55,8 @@ public class ServerThread implements Runnable{
                 return;
             }
 
+            Object responseObject = null;
+
             //Ovde implementiramo logiku za pozivanje odgovarajuce metode
             String[] location = request.getLocation().split("\\?");
             String route = request.getMethod() + "@" + location[0];
@@ -91,8 +93,10 @@ public class ServerThread implements Runnable{
                 }
 
                 //uzmemo vec gotovu instancu klase ove metode
-                Object obj = DIEngine.getInstance().getMethodMap().get(method);
-                if(flag) method.invoke(obj, requestParameters.toArray(new String[0]));
+                Object methodClass = DIEngine.getInstance().getMethodMap().get(method);
+                if(flag){
+                    responseObject = method.invoke(methodClass, requestParameters.toArray(new String[0]));
+                }
 
                 System.out.println(mainClass.getRouteMap().get(route).getName());
             }
@@ -103,12 +107,9 @@ public class ServerThread implements Runnable{
 
 
 
-            // Response example
-            Map<String, Object> responseMap = new HashMap<>();
-            responseMap.put("route_location", request.getLocation());
-            responseMap.put("route_method", request.getMethod().toString());
-            responseMap.put("parameters", request.getParameters());
-            Response response = new JsonResponse(responseMap);
+
+            // Response
+            Response response = new JsonResponse(responseObject);
 
             out.println(response.render());
 
